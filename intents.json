@@ -1,0 +1,249 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hai",
+        "Halo",
+        "Saya mau makan daerah pinang, kunciran",
+        "Hari yang bagus"
+      ],
+      "responses": [
+        "Hai, apakabar? Lagi mau cari makan apa nih?",
+        "Halo selamat datang! Ada yang bisa saya bantu?",
+        "Boleh banget, sekiranya lagi mau makan apa nih?",
+        "Hari yang sangat bagus untuk menikmati hidangan yang lezat!"
+      ]
+    },
+    {
+      "tag": "gado-gado",
+      "patterns": [
+        "Gado Gado yang enak dimana?",
+        "Saran Tempat Gado Gado Yang enak?",
+        "Rekomendasi Gado Gado yang enak"
+      ],
+      "intro": "Ini dia rekomendasi Gado-Gado terenak di daerah Pinang & Kunciran:",
+      "places": [
+        {
+          "nama": "Warung Gado-Gado Cirebon",
+          "alamat": "Jl. Kunciran Indah No. 12, Pinang, Tangerang",
+          "rating": 4.8,
+          "harga": "Rp 15.000 - Rp 25.000",
+          "maps": "https://maps.google.com/?q=Warung+Gado-Gado+Cirebon+Kunciran+Tangerang",
+          "foto": "/static/img/Gado-gado.jpg"
+        },
+        {
+          "nama": "Warung Gado-Gado Bude Ahmad",
+          "alamat": "RT.001/RW.001, Bojong asem, Kec. Pinang, Kota Tangerang, Banten 15144",
+          "rating": 4.6,
+          "harga": "Rp 12.000 - Rp 25.000",
+          "maps": "https://maps.app.goo.gl/nYYX6pbVYg4smd8h7",
+          "foto": "/static/img/Gado-gado.jpg"
+        },
+        {
+          "nama": "Warung Gado-Gado Ibu Yuli",
+          "alamat": "Jl. Silan Mera, RT.002/RW.014, Kunciran Indah, Kec. Pinang, Kota Tangerang, Banten 15144",
+          "rating": 4.3,
+          "harga": "Rp 12.000 - Rp 20.000",
+          "maps": "https://maps.app.goo.gl/SArFWBwTsxm7jgDQ8",
+          "foto": "/static/img/Gado-gado.jpg"
+        }
+      ]
+    },
+    {
+      "tag": "Nasi Goreng",
+      "patterns": [
+        "Nasi goreng yang enak dimana?",
+        "Saran tempat nasi goreng yang enak?",
+        "Rekomendasi nasi goreng yang enak dimana ya?"
+      ],
+      "intro": "Ini dia rekomendasi Nasi Goreng terenak di daerah Pinang & Kunciran:",
+      "places": [
+        {
+          "nama": "Nasi Goreng Saudara",
+          "alamat": "Jl. Pinang-Kunciran, RT.004/RW.001, Pinang, Kec. Pinang, Kota Tangerang, Banten 15143",
+          "rating": 4.9,
+          "harga": "Rp 15.000 - Rp 25.000",
+          "maps": "https://maps.app.goo.gl/6a56dxsbWJTyi2Lp6",
+          "foto": "/static/img/Nasi-goreng.jpg"
+        },
+        {
+          "nama": "Nasi Goreng 717 Mas Asep",
+          "alamat": "RT.006/RW.003, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.9,
+          "harga": "Rp 16.000 - Rp 30.000",
+          "maps": "https://maps.app.goo.gl/8rC8o57ARwgTPVtt7",
+          "foto": "/static/img/Nasi-goreng.jpg"
+        },
+        {
+          "nama": "Melodi Rasa Cipondoh",
+          "alamat": "Jl. KH. Hasyim Ashari No.28a, RT.004/RW.002, Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.9,
+          "harga": "Rp 50.000 - Rp 75.000",
+          "maps": "https://maps.app.goo.gl/MV4G7xbDe2TqprYr7",
+          "foto": "/static/img/Nasi-goreng.jpg"
+        },
+        {
+          "nama": "Nasi Goreng Mas Gendut",
+          "alamat": "RT.005/RW.014, Kunciran Indah, Kec. Pinang, Kota Tangerang, Banten 15144",
+          "rating": 4.8,
+          "harga": "Rp 23.000 - Rp 32.000",
+          "maps": "https://maps.app.goo.gl/V3VBphAYgg7fYTq9A",
+          "foto": "/static/img/Nasi-goreng.jpg"
+        },
+        {
+          "nama": "Nasi Goreng Mas Rio Pinang",
+          "alamat": "Jl. KH. Hasyim Ashari Jl. H. Djiran No.01, RT.005/RW.001, Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.7,
+          "harga": "Rp 15.000 - Rp 40.000",
+          "maps": "https://maps.app.goo.gl/LFs7mTM6At9db86NA",
+          "foto": "/static/img/Nasi-goreng.jpg"
+        },
+        {
+          "nama": "Nasi Goreng Mas Boy",
+          "alamat": "Jl. Bintang No.85, RT.008/RW.004, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.7,
+          "harga": "Rp 13.000 - Rp 25.000",
+          "maps": "https://maps.app.goo.gl/aq451EHAEy1V2mH86",
+          "foto": "/static/img/Nasi-goreng.jpg"
+        }
+      ]
+    },
+    {
+      "tag": "Mie Ayam",
+      "patterns": [
+        "Mie ayam yang enak dimana?",
+        "Saran Tempat Mie ayam Yang enak?",
+        "Rekomendasi Mie ayam yang enak"
+      ],
+      "intro": "Ini dia rekomendasi Mie Ayam terenak di daerah Pinang & Kunciran:",
+      "places": [
+        {
+          "nama": "Mie Ayam Tulangan Mbak Sari Wonogiri",
+          "alamat": "Jl. Darma Bakti, RT.002/RW.015, Kunciran Indah, Kec. Pinang, Kota Tangerang, Banten 15144",
+          "rating": 5.0,
+          "harga": "Rp 25.000 - Rp 30.000",
+          "maps": "https://maps.app.goo.gl/6i8FRpyUc6Stkctj6",
+          "foto": "/static/img/Mie-ayam.jpg"
+        },
+        {
+          "nama": "Mie Ayam Pangsit Pak De Yamaha Wonogiri",
+          "alamat": "Jl. KH. Hasyim Ashari No.40 Blok Gama, RT.002/RW.003, Pinang, Tangerang City, Banten 15145",
+          "rating": 5.0,
+          "harga": "Rp 25.000 - Rp 30.000",
+          "maps": "https://maps.app.goo.gl/ijKhPpGLLuYXti7B7",
+          "foto": "/static/img/Mie-ayam.jpg"
+        },
+        {
+          "nama": "Mie Ayam Sari Rasa (Pakde Sardi)",
+          "alamat": "Jl. Masjid Rawdhatul Jannah No.39, RT.003/RW.006, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.8,
+          "harga": "Rp 16.000 - Rp 23.000",
+          "maps": "https://maps.app.goo.gl/hUzHqf9MK9bq6sgS8",
+          "foto": "/static/img/Mie-ayam.jpg"
+        },
+        {
+          "nama": "Mie Ayam Berkah Wonogiri",
+          "alamat": "Jl. H. Siri No.4, RT.006/RW.005, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.8,
+          "harga": "Rp 15.000 - Rp 25.000",
+          "maps": "https://maps.app.goo.gl/b55yXPRonuHxXSW59",
+          "foto": "/static/img/Mie-ayam.jpg"
+        },
+        {
+          "nama": "Mie Ayam dan Bakso Muntjul - Pinang",
+          "alamat": "Jl. KH. Hasyim Ashari, RT.003/RW.006, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.8,
+          "harga": "Rp 16.000 - Rp 30.000",
+          "maps": "https://maps.app.goo.gl/pWg8T6eVKJySjeMZ9",
+          "foto": "/static/img/Mie-ayam.jpg"
+        },
+        {
+          "nama": "Mie Ayam Banyumas Pinang Griya Permai",
+          "alamat": "Kompleks Pinang Griya Permai Jl. Rajawali Raya Blok B No. 43B, RT.006/RW.005, Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.7,
+          "harga": "Rp 16.000 - Rp 20.000",
+          "maps": "https://maps.app.goo.gl/awrMqR24maxb1wFd8",
+          "foto": "/static/img/Mie-ayam.jpg"
+        },
+        {
+          "nama": "Mie Ayam Pade",
+          "alamat": "Jl. Sejahtera, RT.006/RW.002, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.7,
+          "harga": "Rp 15.000 - Rp 20.000",
+          "maps": "https://maps.app.goo.gl/SZWHm2r3hTeEGuau8",
+          "foto": "/static/img/Mie-ayam.jpg"
+        }
+      ]
+    },
+    {
+      "tag": "Soto",
+      "patterns": [
+        "Soto yang enak dimana ya?",
+        "Saran Tempat Soto Yang enak?",
+        "Rekomendasi Soto dong yang enak"
+      ],
+      "intro": "Ini dia rekomendasi Soto terenak di daerah Pinang & Kunciran:",
+      "places": [
+        {
+          "nama": "Soto Babat & Ayam Khas Cilacap",
+          "alamat": "Jalan, RT.001/RW.005, Kunciran, Pinang, Tangerang City, Banten 15144",
+          "rating": 4.9,
+          "harga": "Rp 22.000 - Rp 45.000",
+          "maps": "https://maps.app.goo.gl/aKcTFWkLLxxy2goKA",
+          "foto": "/static/img/Soto.jpg"
+        },
+        {
+          "nama": "Soto Ayam Jalan Sikam",
+          "alamat": "Jl.H.Sikam 3 RT.03 RW.013 NO.22, RT.002/RW.013, Kunciran Indah, Kec. Pinang, Kota Tangerang, Banten 15144",
+          "rating": 4.8,
+          "harga": "Rp 10.000 - Rp 12.000",
+          "maps": "https://maps.app.goo.gl/2VL3BRft91MyYpCC6",
+          "foto": "/static/img/Soto.jpg"
+        },
+        {
+          "nama": "Soto Ayam Surabaya Pak De Joyo",
+          "alamat": "Perumahan Pinang Griya Permai Ruko Pinang Griya Permai No 1 Pinang, Tangerang, RT.001/RW.005, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145",
+          "rating": 4.7,
+          "harga": "Rp 25.000 - Rp 35.000",
+          "maps": "https://maps.app.goo.gl/uranpCRHqiWNyYRC6",
+          "foto": "/static/img/Soto.jpg"
+        }
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Thanks", "Thank you", "Makasih", "Terima kasih", "That's helpful", "Thank's a lot!"
+      ],
+      "responses": [
+        "Sama-sama! Semoga makannya enak ya!",
+        "Happy to help! Kalau mau cari kuliner lain, tanya aja.",
+        "My pleasure! Selamat menikmati kuliner Pinang!"
+      ]
+    },
+    {
+      "tag": "Kuliner",
+      "patterns": [
+        "Ada kuliner apa aja si di daerah pinang ini?",
+        "Kayanya lagi pengen kulineran didaerah sini, apa yang enak?",
+        "Rekomendasi tempat nongkrong atau kulineran dong?"
+      ],
+      "responses": [
+        "Di Pinang banyak kuliner enak! Ada Gado-Gado, Nasi Goreng, Mie Ayam, dan masih banyak lagi. Mau rekomendasi yang mana?",
+        "Banyak pilihan enak di Kecamatan Pinang! Mau cari Gado-Gado, Nasi Goreng, atau Mie Ayam?",
+        "Siap! Di Pinang & Kunciran banyak kuliner lezat. Mau makan apa hari ini?"
+      ]
+    },
+    {
+      "tag": "funny",
+      "patterns": [
+        "Tell me a joke!", "Tell me something funny!", "Do you know a joke?"
+      ],
+      "responses": [
+        "Why did the hipster burn his mouth? He drank the coffee before it was cool.",
+        "What did the buffalo say when his son left for college? Bison."
+      ]
+    }
+  ]
+}

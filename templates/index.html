@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kuliner Pinang</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --orange: #E8572A; --orange-dark: #C9431C; --orange-light: #FF6B3D;
+      --bg: #0F1014; --bg2: #16181E; --bg3: #1E2028;
+      --border: #2A2D38; --text: #F0EDE8; --text2: #9FA3B1; --text3: #555C72;
+      --green: #22C55E; --star: #F59E0B;
+    }
+    html, body { height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+    #app { display: flex; height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar { width: 220px; min-width: 220px; background: var(--bg2); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 22px 16px; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--orange); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .brand-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.2; }
+    .brand-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .sidebar-divider { height: 1px; background: var(--border); }
+    .menu-item { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-radius: 9px; font-size: 13px; font-weight: 500; color: var(--text); background: var(--bg3); cursor: pointer; }
+    .sidebar-tips { margin-top: auto; }
+    .tips-label { font-size: 11px; color: var(--text3); margin-bottom: 8px; font-weight: 500; letter-spacing: .03em; text-transform: uppercase; }
+    .tip-chip { display: block; font-size: 11px; color: var(--orange); background: #E8572A12; border: 1px solid #E8572A22; border-radius: 7px; padding: 6px 10px; margin-bottom: 6px; cursor: pointer; line-height: 1.4; transition: background .15s; }
+    .tip-chip:hover { background: #E8572A22; }
+
+    /* MAIN */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+    .page { display: none; flex-direction: column; flex: 1; height: 100%; overflow: hidden; }
+    .page.active { display: flex; }
+
+    /* HOME */
+    #page-home { background: var(--bg); justify-content: center; align-items: center; position: relative; overflow: hidden; }
+    .home-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #E8572A18 0%, transparent 50%, #E8572A08 100%); }
+    .home-food-img { position: absolute; right: 0; top: 0; width: 52%; height: 100%; object-fit: cover; opacity: 0.55; -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to left, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%); }
+    .home-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 45%, transparent 75%); }
+    .home-content { position: relative; z-index: 1; padding: 0 52px; max-width: 540px; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+    .home-eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--orange); background: #E8572A18; border: 1px solid #E8572A33; border-radius: 20px; padding: 5px 12px; margin-bottom: 20px; width: fit-content; }
+    .home-content h1 { font-size: 40px; font-weight: 800; line-height: 1.15; margin-bottom: 12px; }
+    .home-content h1 span { color: var(--orange); }
+    .home-content p { font-size: 14px; color: var(--text2); line-height: 1.65; margin-bottom: 28px; max-width: 360px; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--orange); color: #fff; border: none; border-radius: 12px; padding: 13px 24px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background .15s; width: fit-content; }
+    .btn-primary:hover { background: var(--orange-dark); }
+
+    /* CHAT */
+    #page-chat { background: var(--bg); }
+    .chat-header { padding: 16px 22px; border-bottom: 1px solid var(--border); background: var(--bg2); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .online-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .chat-header h3 { font-size: 14px; font-weight: 600; }
+    #chat-messages { flex: 1; overflow-y: auto; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; }
+    #chat-messages::-webkit-scrollbar { width: 3px; }
+    #chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .msg-row { display: flex; flex-direction: column; max-width: 78%; gap: 5px; animation: fadeUp .2s ease; }
+    .msg-row.user { align-self: flex-end; align-items: flex-end; }
+    .msg-row.bot  { align-self: flex-start; align-items: flex-start; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .msg-meta { font-size: 11px; color: var(--text3); padding: 0 4px; display: flex; align-items: center; gap: 5px; }
+    .bubble-user { background: var(--orange); color: #fff; padding: 10px 15px; border-radius: 18px 18px 4px 18px; font-size: 13px; line-height: 1.55; }
+    .bubble-bot { background: var(--bg3); color: var(--text); padding: 10px 15px; border-radius: 18px 18px 18px 4px; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); }
+
+    /* RESULT CARDS */
+    .result-cards { display: flex; flex-direction: column; gap: 8px; max-width: 380px; margin-top: 6px; }
+    .result-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: flex; align-items: stretch; cursor: pointer; transition: border-color .15s, transform .1s; }
+    .result-card:hover { border-color: var(--orange); transform: translateY(-1px); }
+    .result-card-img { width: 75px; min-height: 75px; flex-shrink: 0; overflow: hidden; background: #1a1008; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+    .result-card-img img { width: 75px; height: 75px; object-fit: cover; display: block; }
+    .result-card-info { padding: 10px 12px; flex: 1; min-width: 0; }
+    .result-card-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .result-card-rating { font-size: 11px; color: var(--star); margin-bottom: 3px; }
+    .result-card-addr { font-size: 11px; color: var(--text2); margin-bottom: 3px; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .result-card-price { font-size: 11px; color: var(--green); font-weight: 500; }
+    .result-card-btn { display: flex; align-items: center; padding: 0 14px; background: transparent; border: none; border-left: 1px solid var(--border); color: var(--orange); font-size: 11px; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; flex-direction: column; gap: 2px; flex-shrink: 0; }
+
+    /* TYPING */
+    .typing-wrap { display: flex; gap: 5px; padding: 12px 15px; background: var(--bg3); border: 1px solid var(--border); border-radius: 18px 18px 18px 4px; width: fit-content; }
+    .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); animation: blink 1.2s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100%{opacity:.3;transform:scale(1)} 40%{opacity:1;transform:scale(1.3)} }
+
+    /* INPUT */
+    .chat-input-bar { padding: 12px 20px; border-top: 1px solid var(--border); background: var(--bg2); display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+    .chat-input-bar input { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px; font-size: 13px; color: var(--text); font-family: inherit; outline: none; transition: border-color .15s; }
+    .chat-input-bar input::placeholder { color: var(--text3); }
+    .chat-input-bar input:focus { border-color: #E8572A55; }
+    .send-btn { width: 42px; height: 42px; border-radius: 12px; background: var(--orange); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; transition: background .15s; flex-shrink: 0; }
+    .send-btn:hover { background: var(--orange-dark); }
+
+    /* DETAIL */
+    #page-detail { background: var(--bg); }
+    .detail-header { padding: 14px 22px; border-bottom: 1px solid var(--border); background: var(--bg2); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .back-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text2); cursor: pointer; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; font-family: inherit; transition: color .15s, border-color .15s; }
+    .back-btn:hover { color: var(--text); border-color: var(--text3); }
+    .detail-scroll { flex: 1; overflow-y: auto; }
+    .detail-scroll::-webkit-scrollbar { width: 3px; }
+    .detail-scroll::-webkit-scrollbar-thumb { background: var(--border); }
+    .detail-hero { width: 100%; height: 220px; overflow: hidden; background: #1a1008; display: flex; align-items: center; justify-content: center; font-size: 64px; }
+    .detail-hero img { width: 100%; height: 220px; object-fit: cover; display: block; }
+    .detail-body { padding: 22px; }
+    .detail-name { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+    .detail-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+    .stars { color: var(--star); font-size: 14px; }
+    .rating-val { font-size: 13px; font-weight: 600; color: var(--text); }
+    .review-count { font-size: 12px; color: var(--text3); }
+    .detail-info { display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px; }
+    .info-row { display: flex; align-items: flex-start; gap: 12px; }
+    .info-icon { font-size: 16px; width: 24px; flex-shrink: 0; margin-top: 1px; }
+    .info-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+    .info-val { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .detail-desc { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 22px; padding: 14px 16px; background: var(--bg3); border-radius: 10px; border: 1px solid var(--border); }
+    .detail-actions { display: flex; gap: 10px; flex-shrink: 0; padding: 16px 22px; border-top: 1px solid var(--border); background: var(--bg2); }
+    .btn-maps { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--orange); color: #fff; border: none; border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background .15s; }
+    .btn-maps:hover { background: var(--orange-dark); }
+    .btn-back-result { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: var(--text2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer; transition: border-color .15s, color .15s; }
+    .btn-back-result:hover { border-color: var(--text3); color: var(--text); }
+
+    /* MAPS */
+    #page-maps { background: var(--bg); }
+    .maps-scroll { flex: 1; overflow-y: auto; padding: 22px; }
+    .maps-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .maps-addr { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+    .maps-embed { width: 100%; height: 460px; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 16px; background: var(--bg3); }
+    .maps-embed iframe { width: 100%; height: 100%; border: none; }
+    .maps-open-btn { width: 100%; background: var(--orange); color: #fff; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background .15s; }
+    .maps-open-btn:hover { background: var(--orange-dark); }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍜</div>
+      <div>
+        <div class="brand-name">Kuliner Pinang</div>
+        <div class="brand-sub">Rekomendasi makanan terbaik di Kecamatan Pinang & Kunciran</div>
+      </div>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="menu-item" onclick="showPage('home')">💬 &nbsp;Chat</div>
+    <div class="sidebar-tips">
+      <div class="tips-label">Coba tanya:</div>
+      <div class="tip-chip" onclick="quickSend('Gado-gado yang enak dimana?')">"Gado-gado yang enak dimana?"</div>
+      <div class="tip-chip" onclick="quickSend('Soto yang enak dimana?')">"Soto yang enak dimana?"</div>
+      <div class="tip-chip" onclick="quickSend('Nasi goreng rekomendasinya?')">"Nasi goreng rekomendasinya?"</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div class="home-bg"></div>
+      <img class="home-food-img" src="/static/img/Gado-gado.jpg" alt="Kuliner Pinang" onerror="this.style.display='none'"/>
+      <div class="home-overlay"></div>
+      <div class="home-content">
+        <div class="home-eyebrow">🍴 Kuliner Kecamatan Pinang</div>
+        <h1>Rekomendasi<br/><span>Kuliner</span> Terbaik<br/>di Kecamatan<br/>Pinang & Kunciran</h1>
+        <p>Asisten kuliner siap membantu kamu menemukan tempat makan favorit sesuai selera!</p>
+        <button class="btn-primary" onclick="showPage('chat')">💬 Mulai Chat</button>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="page" id="page-chat">
+      <div class="chat-header">
+        <div class="online-dot"></div>
+        <h3>Asisten Kuliner Pinang</h3>
+      </div>
+      <div id="chat-messages"></div>
+      <div class="chat-input-bar">
+        <input id="msg-input" type="text" placeholder="Tanya makanan enak di Pinang..." autocomplete="off" onkeydown="if(event.key==='Enter') sendMsg()"/>
+        <button class="send-btn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+
+    <!-- DETAIL -->
+    <div class="page" id="page-detail">
+      <div class="detail-header">
+        <button class="back-btn" onclick="showPage('chat')">← Kembali</button>
+      </div>
+      <div class="detail-scroll">
+        <div class="detail-hero" id="detail-hero"></div>
+        <div class="detail-body">
+          <div class="detail-name" id="detail-name"></div>
+          <div class="detail-rating">
+            <div class="stars" id="detail-stars"></div>
+            <div class="rating-val" id="detail-rating-val"></div>
+            <div class="review-count" id="detail-review"></div>
+          </div>
+          <div class="detail-info">
+            <div class="info-row"><div class="info-icon">📂</div><div><div class="info-label">Kategori</div><div class="info-val" id="detail-kat"></div></div></div>
+            <div class="info-row"><div class="info-icon">📍</div><div><div class="info-label">Alamat</div><div class="info-val" id="detail-addr"></div></div></div>
+            <div class="info-row"><div class="info-icon">💰</div><div><div class="info-label">Harga</div><div class="info-val" id="detail-harga"></div></div></div>
+            <div class="info-row"><div class="info-icon">🕐</div><div><div class="info-label">Jam Buka</div><div class="info-val" id="detail-jam"></div></div></div>
+          </div>
+          <div class="detail-desc" id="detail-desc"></div>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="btn-maps" id="detail-maps-btn">🗺️ Lihat di Google Maps</button>
+        <button class="btn-back-result" onclick="showPage('chat')">← Kembali ke Hasil</button>
+      </div>
+    </div>
+
+    <!-- MAPS -->
+    <div class="page" id="page-maps">
+      <div class="detail-header">
+        <button class="back-btn" onclick="showPage('detail')">← Kembali ke Detail</button>
+      </div>
+      <div class="maps-scroll">
+        <div class="maps-title" id="maps-title"></div>
+        <div class="maps-addr" id="maps-addr"></div>
+        <div class="maps-embed">
+          <iframe id="maps-iframe" src="" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        <button class="maps-open-btn" id="maps-open-btn">Buka di Google Maps</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── DATA KULINER — foto pakai path lokal /static/img/ ──
+const KULINER = {
+  "gado-gado": {
+    intro: "Berikut beberapa rekomendasi gado-gado terenak di Kecamatan Pinang & Kunciran 😋",
+    places: [
+      { nama:"Warung Gado-Gado Cirebon",   kat:"Gado-Gado", emoji:"🥗", foto:"/static/img/Gado-gado.jpg",   rating:4.8, reviews:"64 ulasan",  harga:"Rp 15.000 - Rp 25.000", jam:"08.00 - 17.00 WIB", alamat:"Jl. Kunciran Indah No. 12, Pinang, Tangerang", desc:"Gado-gado khas Cirebon dengan bumbu kacang yang kental dan segar, dilengkapi lontong dan kerupuk renyah.", maps:"https://maps.google.com/?q=Warung+Gado+Gado+Cirebon+Kunciran+Tangerang" },
+      { nama:"Warung Gado-Gado Ibu Yuli",   kat:"Gado-Gado", emoji:"🥗", foto:"/static/img/Gado-gado.jpg",   rating:4.3, reviews:"37 ulasan",  harga:"Rp 12.000 - Rp 20.000", jam:"07.30 - 15.00 WIB", alamat:"Jl. Silan Mera, RT.002/RW.014, Kunciran Indah, Kec. Pinang, Kota Tangerang, Banten 15144", desc:"Gado-gado sederhana dengan bumbu kacang yang pas, jadi langganan warga sekitar Kunciran.", maps:"https://maps.app.goo.gl/SArFWBwTsxm7jgDQ8" },
+      { nama:"Warung Gado-Gado Bude Ahmad", kat:"Gado-Gado", emoji:"🥗", foto:"/static/img/Gado-gado.jpg",   rating:4.6, reviews:"48 ulasan",  harga:"Rp 12.000 - Rp 25.000", jam:"07.00 - 16.00 WIB", alamat:"RT.001/RW.001, Bojong Asem, Kec. Pinang, Kota Tangerang, Banten 15144", desc:"Gado-gado rumahan dengan cita rasa autentik, porsi melimpah dan harga sangat terjangkau.", maps:"https://maps.app.goo.gl/nYYX6pbVYg4smd8h7" }
+    ]
+  },
+  "nasi-goreng": {
+    intro: "Berikut beberapa rekomendasi nasi goreng terenak di Kecamatan Pinang & Kunciran 🍳",
+    places: [
+      { nama:"Nasi Goreng Saudara",       kat:"Nasi Goreng", emoji:"🍳", foto:"/static/img/Nasi-goreng.jpg", rating:4.9, reviews:"120 ulasan", harga:"Rp 15.000 - Rp 25.000", jam:"17.00 - 23.00 WIB", alamat:"Jl. Pinang-Kunciran, RT.004/RW.001, Pinang, Kota Tangerang, Banten 15143", desc:"Nasi goreng spesial dengan topping lengkap, wok hei yang kuat dan porsi jumbo. Favorit warga Pinang sejak lama.", maps:"https://maps.app.goo.gl/6a56dxsbWJTyi2Lp6" },
+      { nama:"Nasi Goreng Mas Rio Pinang", kat:"Nasi Goreng", emoji:"🍳", foto:"/static/img/Nasi-goreng.jpg", rating:4.7, reviews:"89 ulasan",  harga:"Rp 15.000 - Rp 40.000", jam:"18.00 - 01.00 WIB", alamat:"Jl. KH. Hasyim Ashari, RT.005/RW.001, Pinang, Kec. Pinang, Kota Tangerang, Banten 15145", desc:"Nasi goreng dengan berbagai pilihan menu, dari yang biasa hingga nasi goreng kambing dengan rempah khas.", maps:"https://maps.app.goo.gl/LFs7mTM6At9db86NA" },
+      { nama:"Nasi Goreng Mas Boy",        kat:"Nasi Goreng", emoji:"🍳", foto:"/static/img/Nasi-goreng.jpg", rating:4.7, reviews:"76 ulasan",  harga:"Rp 13.000 - Rp 25.000", jam:"17.30 - 23.30 WIB", alamat:"Jl. Bintang No.85, RT.008/RW.004, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145", desc:"Nasi goreng rumahan dengan harga bersahabat, rasa konsisten dan selalu ramai pelanggan setia.", maps:"https://maps.app.goo.gl/aq451EHAEy1V2mH86" }
+    ]
+  },
+  "mie-ayam": {
+    intro: "Berikut beberapa rekomendasi mie ayam terenak di Kecamatan Pinang & Kunciran 🍜",
+    places: [
+      { nama:"Mie Ayam Berkah Wonogiri",    kat:"Mie Ayam", emoji:"🍜", foto:"/static/img/Mie-ayam.jpg", rating:4.8, reviews:"93 ulasan", harga:"Rp 15.000 - Rp 25.000", jam:"07.00 - 15.00 WIB", alamat:"Jl. H. Siri No.4, RT.006/RW.005, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145", desc:"Mie ayam khas Wonogiri dengan ceker ayam yang empuk, kuah gurih dan mie yang kenyal. Buka pagi, sering habis sebelum siang.", maps:"https://maps.app.goo.gl/b55yXPRonuHxXSW59" },
+      { nama:"Mie Ayam Pade",               kat:"Mie Ayam", emoji:"🍜", foto:"/static/img/Mie-ayam.jpg", rating:4.7, reviews:"71 ulasan", harga:"Rp 15.000 - Rp 20.000", jam:"07.00 - 14.00 WIB", alamat:"Jl. Sejahtera, RT.006/RW.002, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145", desc:"Mie ayam dengan harga paling terjangkau namun rasa tidak mengecewakan. Pilihan tepat untuk sarapan hemat.", maps:"https://maps.app.goo.gl/SZWHm2r3hTeEGuau8" },
+      { nama:"Mie Ayam dan Bakso Muntjul",  kat:"Mie Ayam", emoji:"🍜", foto:"/static/img/Mie-ayam.jpg", rating:4.8, reviews:"87 ulasan", harga:"Rp 16.000 - Rp 30.000", jam:"07.00 - 16.00 WIB", alamat:"Jl. KH. Hasyim Ashari, RT.003/RW.006, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145", desc:"Kombinasi mie ayam dan bakso dalam satu porsi, kuah bening yang segar dengan bakso yang kenyal dan ayam yang lembut.", maps:"https://maps.app.goo.gl/pWg8T6eVKJySjeMZ9" }
+    ]
+  },
+  "soto": {
+    intro: "Berikut beberapa rekomendasi soto terenak di Kecamatan Pinang & Kunciran 🥣",
+    places: [
+      { nama:"Soto Babat & Ayam Khas Cilacap",  kat:"Soto", emoji:"🥣", foto:"/static/img/Soto.jpg", rating:4.9, reviews:"115 ulasan", harga:"Rp 22.000 - Rp 45.000", jam:"07.00 - 16.00 WIB", alamat:"Jalan, RT.001/RW.005, Kunciran, Pinang, Tangerang City, Banten 15144", desc:"Soto khas Cilacap dengan kuah kuning bening yang kaya rempah. Babatnya empuk dan tidak berbau, jadi favorit pecinta jeroan.", maps:"https://maps.app.goo.gl/aKcTFWkLLxxy2goKA" },
+      { nama:"Soto Ayam Jalan Sikam",            kat:"Soto", emoji:"🥣", foto:"/static/img/Soto.jpg", rating:4.8, reviews:"98 ulasan",  harga:"Rp 10.000 - Rp 12.000", jam:"06.30 - 14.00 WIB", alamat:"Jl.H.Sikam 3 RT.03 RW.013 NO.22, Kunciran Indah, Kec. Pinang, Kota Tangerang, Banten 15144", desc:"Soto ayam paling murah meriah di kawasan Kunciran. Kuah bening segar, cocok untuk sarapan dengan harga sangat ramah di kantong.", maps:"https://maps.app.goo.gl/2VL3BRft91MyYpCC6" },
+      { nama:"Soto Ayam Surabaya Pak De Joyo",   kat:"Soto", emoji:"🥣", foto:"/static/img/Soto.jpg", rating:4.7, reviews:"83 ulasan",  harga:"Rp 25.000 - Rp 35.000", jam:"08.00 - 17.00 WIB", alamat:"Perumahan Pinang Griya Permai Ruko No 1 Pinang, Tangerang, Sudimara Pinang, Kec. Pinang, Kota Tangerang, Banten 15145", desc:"Soto gaya Surabaya dengan kuah bening ringan, dilengkapi telur dan perkedel. Rasanya autentik seperti warung soto di kota asalnya.", maps:"https://maps.app.goo.gl/uranpCRHqiWNyYRC6" }
+    ]
+  }
+};
+
+const GREET = ["hai","halo","hi","hello","selamat","pagi","siang","malam","mau makan","hari yang bagus"];
+const GREET_RESP = ["Halo! Saya El Tempat, asisten kuliner Pinang & Kunciran 🍽️\nMau cari makan apa hari ini?","Hai! Ada yang bisa saya bantu? Mau rekomendasi kuliner apa nih?","Selamat datang! Di sini banyak pilihan kuliner enak. Mau makan apa?"];
+const THANKS = ["thanks","thank you","makasih","terima kasih","thx"];
+const THANKS_RESP = ["Sama-sama! Selamat menikmati kulinernya 😊","Happy to help! Kalau mau cari yang lain, tanya aja ya.","My pleasure! Semoga makannya enak!"];
+
+function stars(r) { return '★'.repeat(Math.floor(r)) + (r % 1 >= 0.5 ? '½' : ''); }
+function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+const msgBox = document.getElementById('chat-messages');
+function scroll() { msgBox.scrollTop = msgBox.scrollHeight; }
+
+function addUser(text) {
+  const d = document.createElement('div');
+  d.className = 'msg-row user';
+  d.innerHTML = `<div class="msg-meta">Kamu ✓✓</div><div class="bubble-user">${esc(text)}</div>`;
+  msgBox.appendChild(d); scroll();
+}
+
+function addBotText(text) {
+  const d = document.createElement('div');
+  d.className = 'msg-row bot';
+  d.innerHTML = `<div class="msg-meta">El Tempat</div><div class="bubble-bot">${esc(text)}</div>`;
+  msgBox.appendChild(d); scroll();
+}
+
+// ── fungsi render foto: pakai <img> kalau ada foto, pakai emoji kalau tidak ──
+function renderFoto(p) {
+  if (p.foto) {
+    return `<img src="${esc(p.foto)}" alt="${esc(p.nama)}" onerror="this.parentElement.innerHTML='${p.emoji}'"/>`;
+  }
+  return p.emoji;
+}
+
+function addBotPlaces(data) {
+  const d = document.createElement('div');
+  d.className = 'msg-row bot';
+
+  const cards = data.places.map((p, i) => {
+    const placesStr = esc(JSON.stringify(data.places));
+    return `
+    <div class="result-card" onclick='openDetail(${i}, ${JSON.stringify(data.places)})'>
+      <div class="result-card-img">${renderFoto(p)}</div>
+      <div class="result-card-info">
+        <div class="result-card-name">${esc(p.nama)}</div>
+        <div class="result-card-rating">${stars(p.rating)} ${p.rating}</div>
+        <div class="result-card-addr">📍 ${esc(p.alamat.split(',')[0])}</div>
+        <div class="result-card-price">💰 ${esc(p.harga)}</div>
+      </div>
+      <button class="result-card-btn">Lihat<br/>Detail</button>
+    </div>`;
+  }).join('');
+
+  d.innerHTML = `
+    <div class="msg-meta">El Tempat</div>
+    <div class="bubble-bot">${esc(data.intro)}</div>
+    <div class="result-cards">${cards}</div>`;
+  msgBox.appendChild(d); scroll();
+}
+
+function addTyping() {
+  const d = document.createElement('div');
+  d.className = 'msg-row bot'; d.id = 'typing-row';
+  d.innerHTML = `<div class="msg-meta">El Tempat</div><div class="typing-wrap"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  msgBox.appendChild(d); scroll(); return d;
+}
+
+function openDetail(idx, places) {
+  const p = places[idx];
+
+  // hero: pakai foto kalau ada, emoji kalau tidak
+  const heroEl = document.getElementById('detail-hero');
+  if (p.foto) {
+    heroEl.innerHTML = `<img src="${esc(p.foto)}" alt="${esc(p.nama)}" onerror="this.parentElement.innerHTML='${p.emoji}'"/>`;
+  } else {
+    heroEl.innerHTML = p.emoji;
+  }
+
+  document.getElementById('detail-name').textContent        = p.nama;
+  document.getElementById('detail-stars').textContent       = stars(p.rating);
+  document.getElementById('detail-rating-val').textContent  = p.rating + ' / 5';
+  document.getElementById('detail-review').textContent      = p.reviews || '';
+  document.getElementById('detail-kat').textContent         = p.kat;
+  document.getElementById('detail-addr').textContent        = p.alamat;
+  document.getElementById('detail-harga').textContent       = p.harga;
+  document.getElementById('detail-jam').textContent         = p.jam || '-';
+  document.getElementById('detail-desc').textContent        = p.desc || '';
+  document.getElementById('detail-maps-btn').onclick        = () => openMaps(p);
+  showPage('detail');
+}
+
+function openMaps(p) {
+  document.getElementById('maps-title').textContent = 'Lokasi ' + p.nama;
+  document.getElementById('maps-addr').textContent  = p.alamat;
+  const q = encodeURIComponent(p.nama + ' ' + p.alamat);
+  document.getElementById('maps-iframe').src        = `https://maps.google.com/maps?q=${q}&output=embed`;
+  document.getElementById('maps-open-btn').onclick  = () => window.open(p.maps, '_blank');
+  showPage('maps');
+}
+
+function detect(t) {
+  t = t.toLowerCase();
+  if (GREET.some(g => t.includes(g))) return 'greeting';
+  if (THANKS.some(g => t.includes(g))) return 'thanks';
+  if (t.includes('gado')) return 'gado-gado';
+  if (t.includes('nasi goreng') || t.includes('nasgor')) return 'nasi-goreng';
+  if (t.includes('mie') || t.includes('mi ayam')) return 'mie-ayam';
+  if (t.includes('soto')) return 'soto';
+  if (t.includes('kuliner') || t.includes('makan') || t.includes('rekomendasi') || t.includes('enak')) return 'general';
+  return null;
+}
+
+function respond(text) {
+  const typ = addTyping();
+  setTimeout(() => {
+    typ.remove();
+    const intent = detect(text);
+    if (intent === 'greeting')      addBotText(rand(GREET_RESP));
+    else if (intent === 'thanks')   addBotText(rand(THANKS_RESP));
+    else if (intent === 'general')  addBotText('Di Pinang banyak pilihan kuliner enak! Ada Gado-Gado, Soto, Mie Ayam, dan Nasi Goreng. Mau rekomendasi yang mana?');
+    else if (KULINER[intent])       addBotPlaces(KULINER[intent]);
+    else addBotText('Hmm, saya belum punya info soal itu 🙏\nCoba tanya soal Gado-gado, Soto, Mie Ayam, atau Nasi Goreng di Pinang ya!');
+    scroll();
+  }, 900);
+}
+
+function sendMsg() {
+  const inp = document.getElementById('msg-input');
+  const val = inp.value.trim(); if (!val) return;
+  showPage('chat');
+  addUser(val); inp.value = '';
+  respond(val);
+  fetch('/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:val}) }).catch(()=>{});
+}
+
+function quickSend(text) { showPage('chat'); document.getElementById('msg-input').value = text; sendMsg(); }
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (id === 'chat') scroll();
+}
+
+addBotText('Halo! Saya El Tempat, asisten kuliner Pinang & Kunciran 🍽️\nMau cari makan apa hari ini?');
+</script>
+</body>
+</html>
